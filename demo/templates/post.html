@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zn">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ post.title }}</title>
+    <link rel="stylesheet" href="https://www.huanggefan.cn/post/highlight.css">
+    <script type='text/x-mathjax-config'>
+        MathJax.Hub.Config({
+            showProcessingMessages: false,
+            showMathMenu: false,
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']],
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a']
+            },
+            CommonHTML: {linebreaks: {automatic: true}},
+            'HTML-CSS': {linebreaks: {automatic: true}},
+            SVG: {linebreaks: {automatic: true}}
+        })
+
+
+    </script>
+    <script src='https://cdn.huanggefan.cn/mathJax/2.7.7/mathJax/MathJax.js?config=TeX-AMS-MML_SVG'></script>
+    <style media="print">
+        * {
+            display: none;
+        }
+        main {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    测试
+</header>
+
+<main>
+
+    {{ post.html | safe }}
+
+</main>
+
+<footer></footer>
+
+<script src="https://www.huanggefan.cn/post/highlight.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>
