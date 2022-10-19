@@ -7,19 +7,13 @@ _templates_dict = {
     "index":     None,
     "about":     None,
     "404":       None,
+
     "post":      None,
     "directory": None,
 }
 
 
-def _load_template(template_path: str) -> jinja2.Template:
-    with open(template_path, "r") as f:
-        t = f.read()
-
-    return jinja2.Template(t)
-
-
-def parse_template(work_dir: str, template_name: str) -> typing.Optional[jinja2.Template]:
+def load_template(work_dir: str, template_name: str) -> typing.Optional[jinja2.Template]:
     t = _templates_dict.get(template_name)
     if t is not None:
         return t
@@ -28,6 +22,9 @@ def parse_template(work_dir: str, template_name: str) -> typing.Optional[jinja2.
     if not os.path.exists(template_path):
         return None
 
-    t = _load_template(template_path)
+    with open(template_path, "r") as f:
+        template_text = f.read()
+    t = jinja2.Template(template_text)
+
     _templates_dict[template_name] = t
     return t

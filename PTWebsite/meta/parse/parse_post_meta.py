@@ -38,6 +38,8 @@ def _get_title_from_md(md_lines: list) -> str:
         match_result = re.match(match_title_re, md)
         if match_result is not None:
             return match_result.groups()[0]
+        else:
+            return ""
 
 
 def _get_key_words_from_md(md_lines: list) -> typing.List[str]:
@@ -48,6 +50,8 @@ def _get_key_words_from_md(md_lines: list) -> typing.List[str]:
         match_result = re.match(match_key_words_re, md)
         if match_result is not None:
             return _parse_list_from_str(match_result.groups()[0])
+        else:
+            return []
 
 
 def _get_description_from_md(md_lines: list) -> str:
@@ -58,6 +62,8 @@ def _get_description_from_md(md_lines: list) -> str:
         match_result = re.match(match_description_re, md)
         if match_result is not None:
             return match_result.groups()[0]
+        else:
+            return ""
 
 
 def _get_create_time_from_md(md_lines: list) -> typing.Optional[datetime.datetime]:
@@ -90,23 +96,23 @@ def _get_release_time_from_md(md_lines: list) -> typing.Optional[datetime.dateti
             return _parse_datetime_form_str(match_result.groups()[0])
 
 
-def _get_title_from_file(md_path: str) -> str:
-    filename = os.path.split(md_path)[-1]
+def _get_title_from_file(md_file_path: str) -> str:
+    filename = os.path.split(md_file_path)[-1]
     return os.path.splitext(filename)[0]
 
 
-def _get_create_time_from_file(md_path: str) -> datetime.datetime:
-    ct = os.path.getctime(md_path)
+def _get_create_time_from_file(md_file_path: str) -> datetime.datetime:
+    ct = os.path.getctime(md_file_path)
     return datetime.datetime.fromtimestamp(ct)
 
 
-def _get_update_time_from_file(md_path: str) -> datetime.datetime:
-    mt = os.path.getmtime(md_path)
+def _get_update_time_from_file(md_file_path: str) -> datetime.datetime:
+    mt = os.path.getmtime(md_file_path)
     return datetime.datetime.fromtimestamp(mt)
 
 
-def _get_markdown(md: str) -> str:
-    md_lines = md.splitlines()
+def _get_markdown(md_file_text: str) -> str:
+    md_lines = md_file_text.splitlines()
     new_md_lines = []
 
     for i in range(len(md_lines)):
@@ -127,11 +133,12 @@ def _get_markdown(md: str) -> str:
     return "\n".join(new_md_lines)
 
 
-def _get_meta(md: str, md_path: str) -> meta.PostMeta.PostMeta:
+def _get_meta(md_file_text: str, md_file_path: str) -> meta.PostMeta.PostMeta:
     post_meta = meta.PostMeta.PostMeta()
 
-    md_lines = md.splitlines()
+    md_lines = md_file_text.splitlines()
 
+    post_meta.path = md_file_path
     post_meta.title = _get_title_from_md(md_lines)
     post_meta.key_words = _get_key_words_from_md(md_lines)
     post_meta.description = _get_description_from_md(md_lines)
@@ -140,20 +147,25 @@ def _get_meta(md: str, md_path: str) -> meta.PostMeta.PostMeta:
     post_meta.release_time = _get_release_time_from_md(md_lines)
 
     if post_meta.title == "":
-        post_meta.title = _get_title_from_file(md_path)
+        post_meta.title = _get_title_from_file(md_file_path)
     if post_meta.create_time is None:
-        post_meta.create_time = _get_create_time_from_file(md_path)
+        post_meta.create_time = _get_create_time_from_file(md_file_path)
     if post_meta.update_time is None:
-        post_meta.update_time = _get_update_time_from_file(md_path)
+        post_meta.update_time = _get_update_time_from_file(md_file_path)
     if post_meta.release_time is None:
         post_meta.release_time = post_meta.create_time
 
-    post_meta.markdown = _get_markdown(md)
+    post_meta.markdown = _get_markdown(md_file_text)
 
     return post_meta
 
 
-def parse_post(md_path: str) -> meta.PostMeta.PostMeta:
+def parse_post_meta(md_path: str) -> meta.PostMeta.PostMeta:
     with open(md_path, "r") as f:
         md = f.read()
     return _get_meta(md, md_path)
+
+
+if __name__ == "__main__":
+    post_meta = parse_post_meta("../../../demo/site/栏目2/栏目2-1文章1.md")
+    print(post_meta)

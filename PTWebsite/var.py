@@ -9,10 +9,6 @@ output_work_dir = ""
 
 quiet = False
 
-render_directory_queue = []
-render_post_queue = []
-render_site_post_queue = []
-
 __version__ = "0.0.1"
 
 

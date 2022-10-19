@@ -5,11 +5,15 @@ import datetime
 class PostInfo(object):
     def __init__(self):
         self.url = ""
+
         self.title = ""
         self.key_words: list[str] = []
         self.description = ""
+
         self.create_time: typing.Optional[datetime.datetime] = None
         self.update_time: typing.Optional[datetime.datetime] = None
+        self.release_time: typing.Optional[datetime.datetime] = None
+
         self.markdown = ""
         self.html = ""
 
@@ -22,6 +26,7 @@ class PostInfo(object):
             description: {}
             create_time: {}
             update_time: {}
+            release_time: {}
             markdown: {}
             html: {}
             '''.format(
@@ -31,6 +36,7 @@ class PostInfo(object):
                 self.description,
                 self.create_time,
                 self.update_time,
+                self.release_time,
                 self.markdown,
                 self.html,
             )
