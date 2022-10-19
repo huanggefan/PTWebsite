@@ -11,13 +11,18 @@ def parse_post_info(md_file_path: str) -> typing.Optional[PostInfo]:
     result = PostInfo()
     post_meta = parse_post_meta(md_file_path)
 
-    result.url = os.path.relpath(md_file_path, var.site_work_dir)
+    result.url = os.path.relpath(post_meta.path, var.site_work_dir)
     result.url = os.path.splitext(result.url)[0] + ".html"
     result.url = os.path.join("/", result.url)
 
     result.title = post_meta.title
     result.key_words = post_meta.key_words
     result.description = post_meta.description
+
+    if post_meta.cover_path != "":
+        result.cover_url = os.path.relpath(post_meta.cover_path, var.site_work_dir)
+        result.cover_url = os.path.join("/", result.cover_url)
+        result.cover_title = os.path.split(post_meta.cover_path)[-1]
 
     result.create_time = post_meta.create_time
     result.update_time = post_meta.update_time
@@ -30,5 +35,6 @@ def parse_post_info(md_file_path: str) -> typing.Optional[PostInfo]:
 
 
 if __name__ == "__main__":
+    var.site_work_dir = "../../../demo/site"
     post_info = parse_post_info("../../../demo/site/栏目2/栏目2-1文章1.md")
     print(post_info)

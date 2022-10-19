@@ -12,6 +12,8 @@ match_create_time_re = r'''@CreateTime (.*?)@'''
 match_update_time_re = r'''@UpdateTime (.*?)@'''
 match_release_time_re = r'''@ReleaseTime (.*?)@'''
 
+cover_file_ext = [".png", ".jpg", ".jpeg"]
+
 
 def _parse_list_from_str(list_str: str) -> typing.List[str]:
     list_str = list_str.replace(" ", "")
@@ -133,6 +135,20 @@ def _get_markdown(md_file_text: str) -> str:
     return "\n".join(new_md_lines)
 
 
+def _get_cover_file(md_file_path: str) -> str:
+    file_dir, file_full_name = os.path.split(md_file_path)
+    file_name, file_ext = os.path.splitext(file_full_name)
+
+    for ext in cover_file_ext:
+        name = file_name + ext
+        cover_file_path = os.path.join(file_dir, name)
+
+        if os.access(cover_file_path, os.R_OK):
+            return cover_file_path
+
+    return ""
+
+
 def _get_meta(md_file_text: str, md_file_path: str) -> meta.PostMeta.PostMeta:
     post_meta = meta.PostMeta.PostMeta()
 
@@ -142,6 +158,7 @@ def _get_meta(md_file_text: str, md_file_path: str) -> meta.PostMeta.PostMeta:
     post_meta.title = _get_title_from_md(md_lines)
     post_meta.key_words = _get_key_words_from_md(md_lines)
     post_meta.description = _get_description_from_md(md_lines)
+    post_meta.cover_path = _get_cover_file(md_file_path)
     post_meta.create_time = _get_create_time_from_md(md_lines)
     post_meta.update_time = _get_update_time_from_md(md_lines)
     post_meta.release_time = _get_release_time_from_md(md_lines)
