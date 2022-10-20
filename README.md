@@ -35,6 +35,8 @@ site root at [demo](./demo)
 
 markdown files in [site](./demo/site)
 
+markdown cover files also in [site](./demo/site), same directory, name as markdown file
+
 png, jpg and others in [site/statics](./demo/site/statics)
 
 templates in [templates](./demo/templates)
@@ -84,6 +86,7 @@ class DirectoryInfo(object):
     def __init__(self):
         self.url = ""
         self.name = ""
+
         self.posts: list[PostInfo] = []
         self.all_posts: list[PostInfo] = []
 
@@ -91,11 +94,18 @@ class DirectoryInfo(object):
 class PostInfo(object):
     def __init__(self):
         self.url = ""
+
         self.title = ""
         self.key_words: list[str] = []
         self.description = ""
+
+        self.cover_url = ""
+        self.cover_title = ""
+
         self.create_time: typing.Optional[datetime.datetime] = None
         self.update_time: typing.Optional[datetime.datetime] = None
+        self.release_time: typing.Optional[datetime.datetime] = None
+
         self.markdown = ""
         self.html = ""
 

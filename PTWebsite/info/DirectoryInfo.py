@@ -1,4 +1,4 @@
-import info.PostInfo
+from info.PostInfo import PostInfo
 
 
 class DirectoryInfo(object):
@@ -6,8 +6,8 @@ class DirectoryInfo(object):
         self.url = ""
         self.name = ""
 
-        self.posts: list[info.PostInfo.PostInfo] = []
-        self.all_posts: list[info.PostInfo.PostInfo] = []
+        self.posts: list[PostInfo] = []
+        self.all_posts: list[PostInfo] = []
 
     def __str__(self):
         return \
