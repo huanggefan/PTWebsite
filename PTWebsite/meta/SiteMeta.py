@@ -21,3 +21,12 @@ class SiteMeta(object):
                 self.description,
                 self.customer_meta,
             )
+
+    def dict(self):
+        return {
+            "name":          self.name,
+            "owner":         self.owner,
+            "key_words":     self.key_words,
+            "description":   self.description,
+            "customer_meta": self.customer_meta,
+        }

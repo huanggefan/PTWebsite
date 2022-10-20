@@ -11,7 +11,7 @@ def _write_meta_dict(site_meta_path: str, data: dict):
 
 def _write_default_meta(site_meta_path: str):
     m = meta.SiteMeta.SiteMeta()
-    meta_json = m.__dict__()
+    meta_json = m.dict()
     _write_meta_dict(site_meta_path, meta_json)
 
 
@@ -33,13 +33,13 @@ def parse_site_meta(site_meta_path: str) -> meta.SiteMeta.SiteMeta:
 
     customer_meta = {}
     for k, v in meta_json.items():
-        if k in list(m.__dict__().keys()):
+        if k in list(m.dict().keys()):
             m.__setattr__(k, v)
         else:
             customer_meta[k] = v
     m.customer_meta = dict(m.customer_meta, **customer_meta)
 
-    meta_json = m.__dict__()
+    meta_json = m.dict()
     _write_meta_dict(site_meta_path, meta_json)
 
     return m

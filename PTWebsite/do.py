@@ -17,9 +17,13 @@ from render.render_post import render_site_root_post
 
 ################################################################################
 
+
 render_directory_queue = []
 render_post_queue = []
 render_site_root_post_queue = []
+
+
+################################################################################
 
 
 def _one_directory(enter: SiteNodeMeta) -> typing.Tuple[DirectoryInfo, str]:
@@ -46,17 +50,17 @@ def do_parse():
     for enter in enters:
         dir_info, dir_output_path = _one_directory(enter)
 
-        render_directory_queue.append((dir_info.__dict__, dir_output_path))
+        render_directory_queue.append((dir_info, dir_output_path))
 
         for post in dir_info.posts:
             post_info, post_output_path = _one_post(post)
-            render_post_queue.append((post_info.__dict__, post_output_path))
+            render_post_queue.append((post_info, post_output_path))
         enters.extend(enter.child_node)
 
     site_first_dir_info, _ = _one_directory(site_tree)
     for post in site_first_dir_info.posts:
         post_info, post_output_path = _one_post(post)
-        render_site_root_post_queue.append((post_info.__dict__, post_output_path))
+        render_site_root_post_queue.append((post_info, post_output_path))
 
 
 ################################################################################

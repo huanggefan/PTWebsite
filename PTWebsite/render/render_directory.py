@@ -1,11 +1,12 @@
 import var
 
 from info.SiteInfo import SiteInfo
+from info.DirectoryInfo import DirectoryInfo
 from tools.load_template import load_template
 from tools.render_one import render_one
 
 
-def render_directory(site_info: SiteInfo, directory_info: dict, output_path: str):
+def render_directory(site_info: SiteInfo, directory_info: DirectoryInfo, output_path: str):
     template = load_template(var.templates_work_dir, "directory")
 
     d = {

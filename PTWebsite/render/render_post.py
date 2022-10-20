@@ -2,6 +2,7 @@ import os
 
 import var
 from info.SiteInfo import SiteInfo
+from info.PostInfo import PostInfo
 from tools.load_template import load_template
 from tools.render_one import render_one
 
@@ -17,8 +18,8 @@ def render_post(site_info: SiteInfo, post_info: dict, output_path: str):
     render_one(template, d, output_path)
 
 
-def render_site_root_post(site_info: SiteInfo, post_info: dict, output_path: str):
-    name = os.path.splitext(os.path.relpath(post_info.get("url"), "/"))[0]
+def render_site_root_post(site_info: SiteInfo, post_info: PostInfo, output_path: str):
+    name = os.path.splitext(os.path.relpath(post_info.url, "/"))[0]
 
     template = load_template(var.templates_work_dir, name)
 
