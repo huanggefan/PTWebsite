@@ -9,7 +9,8 @@ from info.DirectoryInfo import DirectoryInfo
 from info.PostInfo import PostInfo
 from info.parse.parse_directory_info import parse_directory_info
 from tools.get_site_info import get_site_info
-from tools.copy_statics import copy_statics
+from tools.copy_statics import copy_templates_statics
+from tools.copy_statics import copy_site_statics
 from render.render_directory import render_directory
 from render.render_post import render_post
 from render.render_post import render_site_root_post
@@ -64,8 +65,6 @@ def do_parse():
 def do_render():
     site_info = get_site_info()
 
-    copy_statics()
-
     for info, output_path in render_directory_queue:
         render_directory(site_info, info, output_path)
 
@@ -74,3 +73,13 @@ def do_render():
 
     for info, output_path in render_site_root_post_queue:
         render_site_root_post(site_info, info, output_path)
+
+
+################################################################################
+
+
+def do_copy():
+    os.makedirs(var.output_work_dir, exist_ok=True)
+
+    copy_templates_statics()
+    copy_site_statics()

@@ -32,6 +32,7 @@ def do_main(arg: argparse.Namespace):
 
     do.do_parse()
     do.do_render()
+    do.do_copy()
 
 
 if __name__ == "__main__":
