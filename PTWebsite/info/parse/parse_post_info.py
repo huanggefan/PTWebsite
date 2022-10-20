@@ -34,6 +34,11 @@ def parse_post_info(md_file_path: str) -> typing.Optional[PostInfo]:
     result.markdown = post_meta.markdown
     result.html = markdown_to_html(post_meta)
 
+    result.render_src = md_file_path
+    result.render_dist = os.path.relpath(md_file_path, var.site_work_dir)
+    result.render_dist = os.path.join(var.output_work_dir, result.render_dist)
+    result.render_dist = os.path.splitext(result.render_dist)[0] + ".html"
+
     if result.release_time > now:
         return None
     else:
@@ -42,5 +47,6 @@ def parse_post_info(md_file_path: str) -> typing.Optional[PostInfo]:
 
 if __name__ == "__main__":
     var.site_work_dir = "../../../demo/site"
+    var.output_work_dir = "../../../demo/output"
     post_info = parse_post_info("../../../demo/site/栏目2/栏目2-1文章1.md")
     print(post_info)

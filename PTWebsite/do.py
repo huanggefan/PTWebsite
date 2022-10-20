@@ -1,13 +1,10 @@
 import os
-import typing
 
 import var
-
-from meta.SiteNodeMeta import SiteNodeMeta
 from meta.parse.parse_site_node_meta import parse_site_node_meta
-from info.DirectoryInfo import DirectoryInfo
-from info.PostInfo import PostInfo
+from meta.SiteNodeMeta import SiteNodeMeta
 from info.parse.parse_directory_info import parse_directory_info
+from info.DirectoryInfo import DirectoryInfo
 from tools.get_site_info import get_site_info
 from tools.copy_statics import copy_templates_statics
 from tools.copy_statics import copy_site_statics
@@ -20,47 +17,29 @@ from render.render_post import render_site_root_post
 
 render_directory_queue = []
 render_post_queue = []
-render_site_root_post_queue = []
+render_root_post_queue = []
+
+site_node_meta_tree = SiteNodeMeta()
+directory_info_tree = DirectoryInfo()
 
 
 ################################################################################
 
 
-def _one_directory(enter: SiteNodeMeta) -> typing.Tuple[DirectoryInfo, str]:
-    dir_info = parse_directory_info(enter)
-
-    output_path = os.path.relpath(enter.path, var.site_work_dir)
-    output_path = os.path.join(var.output_work_dir, output_path, "index.html")
-
-    return dir_info, output_path
-
-
-def _one_post(post_info: PostInfo) -> typing.Tuple[PostInfo, str]:
-    output_path = os.path.relpath(post_info.url, "/")
-    output_path = os.path.join(var.output_work_dir, output_path)
-    output_path = os.path.splitext(output_path)[0] + ".html"
-
-    return post_info, output_path
-
-
 def do_parse():
-    site_tree = parse_site_node_meta(var.site_work_dir)
+    global site_node_meta_tree
+    global directory_info_tree
 
-    enters = site_tree.child_node
-    for enter in enters:
-        dir_info, dir_output_path = _one_directory(enter)
+    site_node_meta_tree = parse_site_node_meta(var.site_work_dir)
+    directory_info_tree = parse_directory_info(site_node_meta_tree)
 
-        render_directory_queue.append((dir_info, dir_output_path))
+    directory_enters = directory_info_tree.child_node
+    for directory_info_node in directory_enters:
+        render_directory_queue.append(directory_info_node)
+        directory_enters.extend(directory_info_node.child_node)
 
-        for post in dir_info.posts:
-            post_info, post_output_path = _one_post(post)
-            render_post_queue.append((post_info, post_output_path))
-        enters.extend(enter.child_node)
-
-    site_first_dir_info, _ = _one_directory(site_tree)
-    for post in site_first_dir_info.posts:
-        post_info, post_output_path = _one_post(post)
-        render_site_root_post_queue.append((post_info, post_output_path))
+    render_post_queue.extend(directory_info_tree.all_posts)
+    render_root_post_queue.extend(directory_info_tree.posts)
 
 
 ################################################################################
@@ -69,14 +48,14 @@ def do_parse():
 def do_render():
     site_info = get_site_info()
 
-    for info, output_path in render_directory_queue:
-        render_directory(site_info, info, output_path)
+    for info in render_directory_queue:
+        render_directory(site_info, info)
 
-    for info, output_path in render_post_queue:
-        render_post(site_info, info, output_path)
+    for info in render_post_queue:
+        render_post(site_info, info)
 
-    for info, output_path in render_site_root_post_queue:
-        render_site_root_post(site_info, info, output_path)
+    for info in render_root_post_queue:
+        render_site_root_post(site_info, info, directory_info_tree)
 
 
 ################################################################################

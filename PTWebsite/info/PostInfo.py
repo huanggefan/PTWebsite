@@ -20,6 +20,9 @@ class PostInfo(object):
         self.markdown = ""
         self.html = ""
 
+        self.render_src = ""
+        self.render_dist = ""
+
     def __str__(self):
         return \
             '''
@@ -34,6 +37,8 @@ class PostInfo(object):
             release_time: {}
             markdown: {}
             html: {}
+            render_src: {},
+            render_dist: {},
             '''.format(
                 self.url,
                 self.title,
@@ -46,4 +51,6 @@ class PostInfo(object):
                 self.release_time,
                 self.markdown,
                 self.html,
+                self.render_src,
+                self.render_dist,
             )

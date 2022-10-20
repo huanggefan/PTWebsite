@@ -23,7 +23,11 @@
 </head>
 <body>
 
-<header></header>
+<header>
+    {% for post in root.all_posts %}
+    <span>{{ post.url }}</span>
+    {% endfor %}
+</header>
 
 <main>
 

@@ -6,7 +6,7 @@ from tools.load_template import load_template
 from tools.render_one import render_one
 
 
-def render_directory(site_info: SiteInfo, directory_info: DirectoryInfo, output_path: str):
+def render_directory(site_info: SiteInfo, directory_info: DirectoryInfo):
     template = load_template(var.templates_work_dir, "directory")
 
     d = {
@@ -14,4 +14,4 @@ def render_directory(site_info: SiteInfo, directory_info: DirectoryInfo, output_
         "directory": directory_info
     }
 
-    render_one(template, d, output_path)
+    render_one(template, d, directory_info.render_dist)
