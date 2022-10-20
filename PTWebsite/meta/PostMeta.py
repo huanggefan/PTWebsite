@@ -18,19 +18,6 @@ class PostMeta(object):
 
         self.markdown = ""
 
-    def __dict__(self):
-        return {
-            "path":         self.path,
-            "title":        self.title,
-            "key_words":    self.key_words,
-            "description":  self.description,
-            "cover_path":   self.cover_path,
-            "create_time":  self.create_time,
-            "update_time":  self.update_time,
-            "release_time": self.release_time,
-            "markdown":     self.markdown,
-        }
-
     def __str__(self):
         return \
             '''

@@ -1,10 +1,13 @@
 import os
 import typing
+import datetime
 
 import var
 from meta.parse.parse_post_meta import parse_post_meta
 from info.PostInfo import PostInfo
 from tools.markdown_to_html import markdown_to_html
+
+now = datetime.datetime.now()
 
 
 def parse_post_info(md_file_path: str) -> typing.Optional[PostInfo]:
@@ -31,7 +34,10 @@ def parse_post_info(md_file_path: str) -> typing.Optional[PostInfo]:
     result.markdown = post_meta.markdown
     result.html = markdown_to_html(post_meta)
 
-    return result
+    if result.release_time > now:
+        return None
+    else:
+        return result
 
 
 if __name__ == "__main__":

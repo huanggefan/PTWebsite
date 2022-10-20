@@ -33,11 +33,10 @@ def parse_site_node_meta(now_dir: str, now_name="", father_node=None) -> meta.Si
     for f in files:
         if os.path.splitext(f.name)[-1] == ".md":
             node.post_files.append(f.path)
-    node.post_files.sort()
 
     return node
 
 
 if __name__ == "__main__":
     site_node_tree = parse_site_node_meta("../../../demo/site", "", None)
-    site_node_tree.print()
+    print(site_node_tree)

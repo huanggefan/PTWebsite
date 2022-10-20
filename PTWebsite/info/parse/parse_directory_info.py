@@ -47,14 +47,14 @@ def parse_directory_info(node: SiteNodeMeta) -> DirectoryInfo:
     result.posts = _get_posts(node)
     result.all_posts = _get_all_posts(node)
 
+    result.posts.sort(key=lambda x: x.release_time, reverse=True)
+    result.all_posts.sort(key=lambda x: x.release_time, reverse=True)
+
     return result
 
 
 if __name__ == "__main__":
-    site_node_meta = SiteNodeMeta()
-    site_node_meta.path = "../../../demo/site/栏目1"
-    site_node_meta.name = "栏目1"
-
+    from meta.parse.parse_site_node_meta import parse_site_node_meta
+    site_node_meta = parse_site_node_meta("../../../demo/site/栏目1", "", None)
     directory_info = parse_directory_info(site_node_meta)
-
     print(directory_info)
