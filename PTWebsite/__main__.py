@@ -30,9 +30,9 @@ def do_main(arg: argparse.Namespace):
     if not var.quiet:
         _do_main_show()
 
+    do.do_copy()
     do.do_parse()
     do.do_render()
-    do.do_copy()
 
 
 if __name__ == "__main__":
