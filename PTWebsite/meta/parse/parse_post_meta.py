@@ -129,6 +129,8 @@ def _get_markdown(md_file_text: str) -> str:
             continue
         elif re.match(match_update_time_re, md) is not None:
             continue
+        elif re.match(match_release_time_re, md) is not None:
+            continue
         else:
             new_md_lines.append(md)
 
