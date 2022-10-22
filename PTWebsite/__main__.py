@@ -9,12 +9,7 @@ import var
 import do
 
 
-def do_version(arg: argparse.Namespace):
-    print("version:", var.__version__)
-    print("    jinja2 version:", jinja2.__version__)
-
-
-def _do_main_show():
+def _do_show_info():
     print("-------------------------------------------------------------------")
     print("root:", var.work_dir)
     print("site dir:", var.site_work_dir)
@@ -24,12 +19,16 @@ def _do_main_show():
     print("-------------------------------------------------------------------")
 
 
-def do_main(arg: argparse.Namespace):
-    var.set_var(arg)
+def do_version():
+    print("version:", var.__version__)
+    print("    jinja2 version:", jinja2.__version__)
 
-    if not var.quiet:
-        _do_main_show()
 
+def do_serve():
+    do.do_serve()
+
+
+def do_main():
     do.do_copy()
     do.do_parse()
     do.do_render()
@@ -39,14 +38,23 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog='PTWebsite')
 
     parser.add_argument("-r", "--root", help="root dir", type=str)
+    parser.add_argument("-s", "--serve", help="start basic http server", action="store_true")
     parser.add_argument("-v", "--version", help="show version information", action="store_true")
     parser.add_argument("--quiet", help="silent mode, no dot log anythings", action="store_true")
 
     if len(sys.argv) < 2:
         parser.print_help()
+        exit(0)
+
+    args = parser.parse_args()
+    var.set_var(args)
+
+    if not var.quiet:
+        _do_show_info()
+
+    if args.version:
+        do_version()
+    elif args.serve:
+        do_serve()
     else:
-        args = parser.parse_args()
-        if args.version:
-            do_version(args)
-        else:
-            do_main(args)
+        do_main()

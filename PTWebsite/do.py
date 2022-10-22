@@ -1,4 +1,8 @@
+import contextlib
+import http.server
 import os
+import http
+import socket
 
 import var
 from meta.parse.parse_site_node_meta import parse_site_node_meta
@@ -11,6 +15,34 @@ from tools.copy_statics import copy_site_statics
 from render.render_directory import render_directory
 from render.render_post import render_post
 from render.render_post import render_site_root_post
+
+
+################################################################################
+
+class DualStackServer(http.server.ThreadingHTTPServer):
+    def server_bind(self):
+        with contextlib.suppress(Exception):
+            self.socket.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 0)
+        return super().server_bind()
+
+    def finish_request(self, request, client_address):
+        self.RequestHandlerClass(
+            request, client_address, self,
+            directory=var.output_work_dir
+        )
+
+
+def do_serve():
+    listen_address = "0.0.0.0"
+    listen_port = 8000
+    print("listen on: {}:{}".format(listen_address, listen_port))
+    print("browser open at: http://{}:{}/".format("127.0.0.1", listen_port))
+
+    server = DualStackServer((listen_address, listen_port), http.server.SimpleHTTPRequestHandler)
+    server.request_queue_size = 32
+    server.allow_reuse_address = True
+    server.serve_forever()
+
 
 ################################################################################
 
