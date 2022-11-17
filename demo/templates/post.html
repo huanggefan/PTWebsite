@@ -19,26 +19,29 @@
         })
     </script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_SVG'></script>
-    <style media="print">
-        * {
-            display: none;
-        }
-        main {
-            display: block;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/all.css">
+    <link rel="stylesheet" href="/css/post.css">
 </head>
 <body>
 
 <header>
-    测试
+    <h1 class="header-item" href="/">Demo Website</h1>
 
-    <img src="{{ post.cover_url }}" alt="{{ post.cover_title }}"/>
+    <form class="header-item">
+        <input aria-label="search" placeholder="search...">
+    </form>
 </header>
 
 <main>
 
-    {{ post.html | safe }}
+    <div class="wrapper">
+        <img class="wrapper-cover" alt="{{ post.cover_title }}" src="{{ post.cover_url }}">
+        <h1 class="wrapper-title">{{ post.title }}</h1>
+    </div>
+
+    <div class="post">
+        {{ post.html | safe }}
+    </div>
 
 </main>
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ directory.name }}</title>
-    <link rel="stylesheet" href="https://www.huanggefan.cn/post/highlight.css">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.6.0/styles/base16/one-light.min.css">
     <script type='text/x-mathjax-config'>
         MathJax.Hub.Config({
             showProcessingMessages: false,
@@ -17,29 +17,49 @@
             'HTML-CSS': {linebreaks: {automatic: true}},
             SVG: {linebreaks: {automatic: true}}
         })
-
-
-
-
-
     </script>
-    <script src='https://cdn.huanggefan.cn/mathJax/2.7.7/mathJax/MathJax.js?config=TeX-AMS-MML_SVG'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_SVG'></script>
+    <link rel="stylesheet" href="/css/all.css">
+    <link rel="stylesheet" href="/css/directory.css">
 </head>
 <body>
 
-<header></header>
+<header>
+    <h1 class="header-item" href="/">Demo Website</h1>
+
+    <form class="header-item">
+        <input aria-label="search" placeholder="search...">
+    </form>
+
+    {% if directory.father_node %}
+    <a class="header-item" href="{{ directory.father_node.url }}" title="go back: {{ directory.father_node.name }}">
+        go back
+    </a>
+    {% endif %}
+</header>
 
 <main>
 
+    <div class="wrapper">
     {% for post in directory.all_posts %}
-    <span>{{ post.url }}</span>
+        <a class="wrapper-item" href="{{ post.url }}" title="{{ post.title }}" target="_blank">
+            <img class="wrapper-item-cover" src="" title=""  alt=""/>
+            <span class="wrapper-item-title">{{ post.title }}</span>
+        </a>
     {% endfor %}
+    </div>
+
+    <div class="navbar">
+    {% for directory in directory.child_node %}
+        <a class="navbar-item" href="{{ directory.url }}" title="{{ directory.name }}">{{ directory.name }}</a>
+    {% endfor %}
+    </div>
 
 </main>
 
 <footer></footer>
 
-<script src="https://www.huanggefan.cn/post/highlight.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
 <script>
     hljs.initHighlightingOnLoad();
 </script>
