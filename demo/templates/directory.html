@@ -43,7 +43,7 @@
     <div class="wrapper">
     {% for post in directory.all_posts %}
         <a class="wrapper-item" href="{{ post.url }}" title="{{ post.title }}" target="_blank">
-            <img class="wrapper-item-cover" src="" title=""  alt=""/>
+            <img class="wrapper-item-cover" src="{{ post.cover_url }}"  alt="{{ post.cover_title }}"/>
             <span class="wrapper-item-title">{{ post.title }}</span>
         </a>
     {% endfor %}
