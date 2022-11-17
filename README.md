@@ -15,6 +15,12 @@ generate website
 PTWebsite -r ./demo_site
 ```
 
+start basic http server after generate website
+
+```shell
+PTWebsite -r ./demo_site -s
+```
+
 show help information
 
 ```shell
@@ -90,6 +96,9 @@ class DirectoryInfo(object):
         self.posts: list[PostInfo] = []
         self.all_posts: list[PostInfo] = []
 
+        self.father_node: typing.Optional[DirectoryInfo] = None
+        self.child_node: list[DirectoryInfo] = []
+
 
 class PostInfo(object):
     def __init__(self):
@@ -116,6 +125,11 @@ info_to_render_directory = {
 }
 info_to_render_post = {
     "site": SiteInfo,
+    "post": PostInfo,
+}
+info_to_render_site_root_post = {
+    "site": SiteInfo,
+    "root": DirectoryInfo,
     "post": PostInfo,
 }
 ```
