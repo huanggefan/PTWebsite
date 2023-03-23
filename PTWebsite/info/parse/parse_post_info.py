@@ -22,14 +22,17 @@ def parse_post_info(md_file_path: str) -> typing.Optional[PostInfo]:
     result.key_words = post_meta.key_words
     result.description = post_meta.description
 
-    if post_meta.cover_path != "":
-        result.cover_url = os.path.relpath(post_meta.cover_path, var.site_work_dir)
-        result.cover_url = os.path.join("/", result.cover_url)
-        result.cover_title = os.path.split(post_meta.cover_path)[-1]
+    if post_meta.thumbnail != "":
+        result.thumbnail_url = post_meta.thumbnail
+        result.thumbnail_alt = os.path.split(post_meta.thumbnail)[-1]
 
     result.create_time = post_meta.create_time
     result.update_time = post_meta.update_time
     result.release_time = post_meta.release_time
+
+    result.template = post_meta.template
+
+    result.json = post_meta.json
 
     result.markdown = post_meta.markdown
     result.html = markdown_to_html(post_meta)

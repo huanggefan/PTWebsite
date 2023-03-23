@@ -9,7 +9,12 @@ from tools.render_one import render_one
 
 
 def render_post(site_info: SiteInfo, post_info: PostInfo):
-    template = load_template(var.templates_work_dir, "post")
+    template = None
+    if post_info.template != "":
+        template_name = "customer/{}".format(post_info.template)
+        template = load_template(var.templates_work_dir, template_name)
+    if template is None:
+        template = load_template(var.templates_work_dir, "post")
 
     d = {
         "site": site_info,

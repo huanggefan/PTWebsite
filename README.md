@@ -108,12 +108,16 @@ class PostInfo(object):
         self.key_words: list[str] = []
         self.description = ""
 
-        self.cover_url = ""
-        self.cover_title = ""
+        self.thumbnail_url = ""
+        self.thumbnail_alt = ""
 
         self.create_time: typing.Optional[datetime.datetime] = None
         self.update_time: typing.Optional[datetime.datetime] = None
         self.release_time: typing.Optional[datetime.datetime] = None
+
+        self.template = ""
+
+        self.json = {}
 
         self.markdown = ""
         self.html = ""
@@ -133,3 +137,15 @@ info_to_render_site_root_post = {
     "post": PostInfo,
 }
 ```
+
+## post meta key
+
+1. Title
+2. KeyWords
+3. Description
+4. Thumbnail
+5. CreateTime
+6. UpdateTime
+7. ReleaseTime
+8. Template
+9. JSON

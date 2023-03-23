@@ -10,12 +10,16 @@ class PostInfo(object):
         self.key_words: list[str] = []
         self.description = ""
 
-        self.cover_url = ""
-        self.cover_title = ""
+        self.thumbnail_url = ""
+        self.thumbnail_alt = ""
 
         self.create_time: typing.Optional[datetime.datetime] = None
         self.update_time: typing.Optional[datetime.datetime] = None
         self.release_time: typing.Optional[datetime.datetime] = None
+
+        self.template = ""
+
+        self.json = {}
 
         self.markdown = ""
         self.html = ""
@@ -30,12 +34,13 @@ class PostInfo(object):
             title: {}
             key_words: {}
             description: {}
-            cover_url: {}
-            cover_title: {}
+            thumbnail_url: {}
+            thumbnail_alt: {}
             create_time: {}
             update_time: {}
             release_time: {}
             markdown: {}
+            json: {}
             html: {}
             render_src: {},
             render_dist: {},
@@ -44,11 +49,12 @@ class PostInfo(object):
                 self.title,
                 self.key_words,
                 self.description,
-                self.cover_url,
-                self.cover_title,
+                self.thumbnail_url,
+                self.thumbnail_alt,
                 self.create_time,
                 self.update_time,
                 self.release_time,
+                self.json,
                 self.markdown,
                 self.html,
                 self.render_src,

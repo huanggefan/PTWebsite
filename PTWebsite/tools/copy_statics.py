@@ -8,6 +8,9 @@ def copy_templates_statics():
     for entry in os.scandir(var.templates_work_dir):
         assert isinstance(entry, os.DirEntry)
 
+        if entry.name == "customer":
+            continue
+
         s_src = entry.path
         s_dist = os.path.join(var.output_work_dir, entry.name)
         s_dist_dir = os.path.split(s_dist)[0]

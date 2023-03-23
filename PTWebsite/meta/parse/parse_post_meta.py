@@ -1,101 +1,28 @@
-import re
 import datetime
+import json
 import typing
 import os.path
 
 import meta.PostMeta
 
-match_title_re = r'''@Title (.*?)@'''
-match_key_words_re = r'''@KeyWords (.*?)@'''
-match_description_re = r'''@Description (.*?)@'''
-match_create_time_re = r'''@CreateTime (.*?)@'''
-match_update_time_re = r'''@UpdateTime (.*?)@'''
-match_release_time_re = r'''@ReleaseTime (.*?)@'''
 
-cover_file_ext = [".png", ".jpg", ".jpeg"]
-
-
-def _parse_list_from_str(list_str: str) -> typing.List[str]:
+def _list_from_str(list_str: str) -> typing.List[str]:
     list_str = list_str.replace(" ", "")
     return list_str.split(",")
 
 
-def _parse_datetime_form_str(datetime_str: str) -> typing.Optional[datetime.datetime]:
+def _datetime_form_str(datetime_str: str) -> typing.Optional[datetime.datetime]:
     try:
         return datetime.datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
     except ValueError:
-        return datetime.datetime.strptime(datetime_str, "%Y-%m-%d")
-    except Exception:
         return None
 
 
-scan_markdown_lines_limit = 12
-
-
-def _get_title_from_md(md_lines: list) -> str:
-    for i in range(scan_markdown_lines_limit):
-        if i >= len(md_lines):
-            return ""
-        md = md_lines[i]
-        match_result = re.match(match_title_re, md)
-        if match_result is not None:
-            return match_result.groups()[0]
-        else:
-            return ""
-
-
-def _get_key_words_from_md(md_lines: list) -> typing.List[str]:
-    for i in range(scan_markdown_lines_limit):
-        if i >= len(md_lines):
-            return []
-        md = md_lines[i]
-        match_result = re.match(match_key_words_re, md)
-        if match_result is not None:
-            return _parse_list_from_str(match_result.groups()[0])
-        else:
-            return []
-
-
-def _get_description_from_md(md_lines: list) -> str:
-    for i in range(scan_markdown_lines_limit):
-        if i >= len(md_lines):
-            return ""
-        md = md_lines[i]
-        match_result = re.match(match_description_re, md)
-        if match_result is not None:
-            return match_result.groups()[0]
-        else:
-            return ""
-
-
-def _get_create_time_from_md(md_lines: list) -> typing.Optional[datetime.datetime]:
-    for i in range(scan_markdown_lines_limit):
-        if i >= len(md_lines):
-            return None
-        md = md_lines[i]
-        match_result = re.match(match_create_time_re, md)
-        if match_result is not None:
-            return _parse_datetime_form_str(match_result.groups()[0])
-
-
-def _get_update_time_from_md(md_lines: list) -> typing.Optional[datetime.datetime]:
-    for i in range(scan_markdown_lines_limit):
-        if i >= len(md_lines):
-            return None
-        md = md_lines[i]
-        match_result = re.match(match_update_time_re, md)
-        if match_result is not None:
-            return _parse_datetime_form_str(match_result.groups()[0])
-
-
-def _get_release_time_from_md(md_lines: list) -> typing.Optional[datetime.datetime]:
-    for i in range(scan_markdown_lines_limit):
-        if i >= len(md_lines):
-            return None
-        md = md_lines[i]
-        match_result = re.match(match_release_time_re, md)
-        if match_result is not None:
-            return _parse_datetime_form_str(match_result.groups()[0])
+def _json_from_str(json_str) -> object:
+    try:
+        return json.loads(json_str)
+    except json.JSONDecodeError:
+        return {}
 
 
 def _get_title_from_file(md_file_path: str) -> str:
@@ -113,78 +40,116 @@ def _get_update_time_from_file(md_file_path: str) -> datetime.datetime:
     return datetime.datetime.fromtimestamp(mt)
 
 
-def _get_markdown(md_file_text: str) -> str:
-    md_lines = md_file_text.splitlines()
-    new_md_lines = []
+class ParsePostMetaDFA(object):
+    def __init__(self):
+        self.length = 0
+        self.text = ""
 
-    for i in range(len(md_lines)):
-        md = md_lines[i]
-        if re.match(match_title_re, md) is not None:
-            continue
-        elif re.match(match_key_words_re, md) is not None:
-            continue
-        elif re.match(match_description_re, md) is not None:
-            continue
-        elif re.match(match_create_time_re, md) is not None:
-            continue
-        elif re.match(match_update_time_re, md) is not None:
-            continue
-        elif re.match(match_release_time_re, md) is not None:
-            continue
-        else:
-            new_md_lines.append(md)
+        self.pointer = 0
+        self.key_buffer = ""
+        self.value_buffer = ""
+        self.markdown_buffer = ""
 
-    return "\n".join(new_md_lines)
+        self.func = self.__f_start
 
+        self.result = {}
 
-def _get_cover_file(md_file_path: str) -> str:
-    file_dir, file_full_name = os.path.split(md_file_path)
-    file_name, file_ext = os.path.splitext(file_full_name)
+    def do(self, md_path: str) -> meta.PostMeta.PostMeta | None:
+        with open(md_path, "r") as f:
+            self.text = f.read()
+            self.length = len(self.text)
 
-    for ext in cover_file_ext:
-        name = file_name + ext
-        cover_file_path = os.path.join(file_dir, name)
+        while self.pointer < self.length and self.func != self.__f_finish:
+            self.func()
 
-        if os.access(cover_file_path, os.R_OK):
-            return cover_file_path
+        post_meta = meta.PostMeta.PostMeta()
 
-    return ""
+        post_meta.path = md_path
+        post_meta.title = self.result["Title"] if self.result.get("Title") is not None else ""
+        post_meta.key_words = _list_from_str(self.result["KeyWords"]) if self.result.get("KeyWords") is not None else []
+        post_meta.description = self.result["Description"] if self.result.get("Description") is not None else ""
+        post_meta.thumbnail = self.result["Thumbnail"] if self.result.get("Thumbnail") is not None else ""
+        post_meta.create_time = _datetime_form_str(self.result["CreateTime"]) if self.result.get("CreateTime") is not None else None
+        post_meta.update_time = _datetime_form_str(self.result["UpdateTime"]) if self.result.get("UpdateTime") is not None else None
+        post_meta.release_time = _datetime_form_str(self.result["ReleaseTime"]) if self.result.get("ReleaseTime") is not None else None
+        post_meta.template = self.result.get("Template") if self.result.get("Template") is not None else None
+        post_meta.json = _json_from_str(self.result["JSON"]) if self.result.get("JSON") is not None else {}
+        post_meta.markdown = self.markdown_buffer
 
+        if post_meta.title == "":
+            post_meta.title = _get_title_from_file(md_path)
+        if post_meta.create_time is None:
+            post_meta.create_time = _get_create_time_from_file(md_path)
+        if post_meta.update_time is None:
+            post_meta.update_time = _get_update_time_from_file(md_path)
+        if post_meta.release_time is None:
+            post_meta.release_time = post_meta.create_time
+        return post_meta
 
-def _get_meta(md_file_text: str, md_file_path: str) -> meta.PostMeta.PostMeta:
-    post_meta = meta.PostMeta.PostMeta()
+    def __f_start(self):
+        if self.length < 1:
+            self.func = self.__f_finish
+            return
 
-    md_lines = md_file_text.splitlines()
+        self.func = self.__f_entry
 
-    post_meta.path = md_file_path
-    post_meta.title = _get_title_from_md(md_lines)
-    post_meta.key_words = _get_key_words_from_md(md_lines)
-    post_meta.description = _get_description_from_md(md_lines)
-    post_meta.cover_path = _get_cover_file(md_file_path)
-    post_meta.create_time = _get_create_time_from_md(md_lines)
-    post_meta.update_time = _get_update_time_from_md(md_lines)
-    post_meta.release_time = _get_release_time_from_md(md_lines)
+    def __f_entry(self):
+        if self.pointer == self.length - 1:
+            self.func = self.__f_finish
+            return
 
-    if post_meta.title == "":
-        post_meta.title = _get_title_from_file(md_file_path)
-    if post_meta.create_time is None:
-        post_meta.create_time = _get_create_time_from_file(md_file_path)
-    if post_meta.update_time is None:
-        post_meta.update_time = _get_update_time_from_file(md_file_path)
-    if post_meta.release_time is None:
-        post_meta.release_time = post_meta.create_time
+        if self.text[self.pointer] in ["", " ", "\n", "\r", "\t"]:
+            self.pointer += 1
+            self.func = self.__f_entry
+            return
 
-    post_meta.markdown = _get_markdown(md_file_text)
+        if self.text[self.pointer] == "@":
+            self.pointer += 1
+            self.func = self.__f_key
+            return
 
-    return post_meta
+        self.func = self.__f_markdown
+
+    def __f_key(self):
+        if self.text[self.pointer] in ["", " ", "\n", "\r", "\t"]:
+            self.pointer += 1
+            self.func = self.__f_value
+            return
+
+        self.key_buffer += self.text[self.pointer]
+        self.pointer += 1
+        self.func = self.__f_key
+
+    def __f_value(self):
+        if self.text[self.pointer] == "@":
+            self.result[self.key_buffer] = self.value_buffer
+            self.key_buffer = ""
+            self.value_buffer = ""
+            self.pointer += 1
+            self.func = self.__f_entry
+            return
+
+        self.value_buffer += self.text[self.pointer]
+        self.pointer += 1
+        self.func = self.__f_value
+
+    def __f_markdown(self):
+        if self.pointer == self.length - 1:
+            self.func = self.__f_finish
+            return
+
+        self.markdown_buffer += self.text[self.pointer]
+        self.pointer += 1
+
+    def __f_finish(self):
+        return
 
 
 def parse_post_meta(md_path: str) -> meta.PostMeta.PostMeta:
-    with open(md_path, "r") as f:
-        md = f.read()
-    return _get_meta(md, md_path)
+    dfa = ParsePostMetaDFA()
+    return dfa.do(md_path)
 
 
 if __name__ == "__main__":
-    post_meta = parse_post_meta("../../../demo/site/栏目2/栏目2-1文章1.md")
+    post_meta = parse_post_meta("../../../demo/site/栏目4/栏目4-1文章1.md")
     print(post_meta)
