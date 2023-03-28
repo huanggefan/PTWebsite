@@ -90,8 +90,18 @@ class SiteInfo(object):
 
 class DirectoryInfo(object):
     def __init__(self):
-        self.url = ""
         self.name = ""
+        self.url = ""
+
+        self.key_words: list[str] = []
+        self.description: str = ""
+
+        self.thumbnail_url = ""
+        self.thumbnail_alt = ""
+
+        self.template: str = ""
+
+        self.customer_meta: dict = {}
 
         self.posts: list[PostInfo] = []
         self.all_posts: list[PostInfo] = []

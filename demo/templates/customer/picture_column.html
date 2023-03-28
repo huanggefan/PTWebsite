@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>picture_column {{ directory.name }}</title>
+</head>
+<body>
+
+<p>
+    {% for key_word in directory.key_words %}
+    {{ key_word }},
+    {% endfor %}
+</p>
+
+<p>{{ directory.description }}</p>
+
+<img src="{{ directory.thumbnail_url }}" alt="{{ directory.thumbnail_alt }}">
+
+<p>{{ directory.template }}</p>
+
+</body>
+</html>

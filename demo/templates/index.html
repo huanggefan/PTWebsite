@@ -35,6 +35,22 @@
 
 <main>
 
+    <p>
+    {% for key_word in root.key_words %}
+       {{ key_word }},
+    {% endfor %}
+    </p>
+
+    <p>{{ root.description }}</p>
+
+    <p>
+    {% for key_word in site.key_words %}
+       {{ key_word }},
+    {% endfor %}
+    </p>
+
+    <p>{{ site.description }}</p>
+
     <div class="wrapper">
     {% for post in root.all_posts %}
         <a class="wrapper-item" href="{{ post.url }}" title="{{ post.title }}" target="_blank">

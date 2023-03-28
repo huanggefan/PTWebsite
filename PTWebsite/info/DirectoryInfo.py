@@ -5,8 +5,18 @@ from info.PostInfo import PostInfo
 
 class DirectoryInfo(object):
     def __init__(self):
-        self.url = ""
         self.name = ""
+        self.url = ""
+
+        self.key_words: list[str] = []
+        self.description: str = ""
+
+        self.thumbnail_url = ""
+        self.thumbnail_alt = ""
+
+        self.template: str = ""
+
+        self.customer_meta: dict = {}
 
         self.posts: list[PostInfo] = []
         self.all_posts: list[PostInfo] = []
@@ -20,8 +30,14 @@ class DirectoryInfo(object):
     def __str__(self):
         return \
             '''
-            url: {}
             name: {}
+            url: {}
+            key_words: {}
+            description: {}
+            thumbnail_url: {}
+            thumbnail_alt: {}
+            template: {}
+            customer_meta: {}
             posts: {}
             all_posts: {}
             father_node: {}
@@ -29,8 +45,14 @@ class DirectoryInfo(object):
             render_src: {},
             render_dist: {},
             '''.format(
-                self.url,
                 self.name,
+                self.url,
+                self.key_words,
+                self.description,
+                self.thumbnail_url,
+                self.thumbnail_alt,
+                self.template,
+                self.customer_meta,
                 self.posts,
                 self.all_posts,
                 self.father_node,

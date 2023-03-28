@@ -5,11 +5,15 @@ import http
 import socket
 
 import var
-from meta.parse.parse_site_node_meta import parse_site_node_meta
+
+from meta.SiteMeta import SiteMeta
 from meta.SiteNodeMeta import SiteNodeMeta
-from info.parse.parse_directory_info import parse_directory_info
+from meta.parse.parse_site_meta import parse_site_meta
+from meta.parse.parse_site_node_meta import parse_site_node_meta
+from info.SiteInfo import SiteInfo
 from info.DirectoryInfo import DirectoryInfo
-from tools.get_site_info import get_site_info
+from info.parse.parse_site_info import parse_site_info
+from info.parse.parse_directory_info import parse_directory_info
 from tools.copy_statics import copy_templates_statics
 from tools.copy_statics import copy_site_statics
 from render.render_directory import render_directory
@@ -51,7 +55,9 @@ render_directory_queue = []
 render_post_queue = []
 render_root_post_queue = []
 
+site_meta = SiteMeta()
 site_node_meta_tree = SiteNodeMeta()
+site_info = SiteInfo()
 directory_info_tree = DirectoryInfo()
 
 
@@ -59,11 +65,15 @@ directory_info_tree = DirectoryInfo()
 
 
 def do_parse():
+    global site_meta
     global site_node_meta_tree
+    global site_info
     global directory_info_tree
 
+    site_meta = parse_site_meta(var.meta_work_dir)
     site_node_meta_tree = parse_site_node_meta(var.site_work_dir)
-    directory_info_tree = parse_directory_info(site_node_meta_tree)
+    site_info = parse_site_info(site_meta)
+    directory_info_tree = parse_directory_info(site_info, site_node_meta_tree)
 
     directory_enters = directory_info_tree.child_node
     for directory_info_node in directory_enters:
@@ -78,8 +88,6 @@ def do_parse():
 
 
 def do_render():
-    site_info = get_site_info()
-
     for info in render_directory_queue:
         render_directory(site_info, info)
 
