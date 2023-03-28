@@ -1,26 +1,23 @@
 <!DOCTYPE html>
-<html lang="zn">
+<html lang="zn" xmlns="">
 <head>
     <meta charset="UTF-8">
     <title>{{ post.title }}</title>
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.6.0/styles/base16/one-light.min.css">
-    <script type='text/x-mathjax-config'>
-        MathJax.Hub.Config({
-            showProcessingMessages: false,
-            showMathMenu: false,
-            tex2jax: {
-                inlineMath: [['$', '$']],
-                displayMath: [['$$', '$$']],
-                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a']
-            },
-            CommonHTML: {linebreaks: {automatic: true}},
-            'HTML-CSS': {linebreaks: {automatic: true}},
-            SVG: {linebreaks: {automatic: true}}
-        })
-    </script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_SVG'></script>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.6.0/styles/base16/one-light.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/all.css">
     <link rel="stylesheet" href="/css/post.css">
+    <style>
+        .post {
+            padding: 5rem calc(50% - 32rem);
+            max-width: 64rem;
+            overflow-x: auto;
+        }
+        p {
+            word-break: break-all;
+            text-align: justify;
+        }
+    </style>
 </head>
 <body>
 
@@ -51,5 +48,17 @@
 <script>
     hljs.initHighlightingOnLoad();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 </body>
+<script>
+    const katex_config = {
+        delimiters:
+            [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+    };
+    renderMathInElement(document.body, katex_config);
+</script>
 </html>
