@@ -122,6 +122,7 @@ class ParsePostMetaDFA(object):
 
     def __f_value(self):
         if self.text[self.pointer] == "@":
+            self.value_buffer = self.value_buffer.strip()
             self.result[self.key_buffer] = self.value_buffer
             self.key_buffer = ""
             self.value_buffer = ""
@@ -151,5 +152,5 @@ def parse_post_meta(md_path: str) -> meta.PostMeta.PostMeta:
 
 
 if __name__ == "__main__":
-    post_meta = parse_post_meta("../../../demo/site/栏目4/栏目4-1文章1.md")
-    print(post_meta)
+    post_meta_t = parse_post_meta("../../../demo/site/栏目4/栏目4-1文章1.md")
+    print(post_meta_t)
