@@ -1,23 +1,13 @@
 <!DOCTYPE html>
-<html lang="zn" xmlns="">
+<html lang="zh" xmlns="">
 <head>
     <meta charset="UTF-8">
+    <meta name="keywords" content="{{ ','.join(post.key_words) }}">
+    <meta name="description" content="{{ post.description }}">
     <title>{{ post.title }}</title>
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.6.0/styles/base16/one-light.min.css" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" crossorigin="anonymous">
+
     <link rel="stylesheet" href="/css/all.css">
     <link rel="stylesheet" href="/css/post.css">
-    <style>
-        .post {
-            padding: 5rem calc(50% - 32rem);
-            max-width: 64rem;
-            overflow-x: auto;
-        }
-        p {
-            word-break: break-all;
-            text-align: justify;
-        }
-    </style>
 </head>
 <body>
 
@@ -44,21 +34,13 @@
 
 <footer></footer>
 
-<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
-<script>
-    hljs.initHighlightingOnLoad();
-</script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<link href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.6.0/styles/base16/one-light.min.css" rel="stylesheet">
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.6.0/highlight.min.js" type="text/javascript"></script>
+
+<link href="https://cdn.bootcdn.net/ajax/libs/KaTeX/0.16.4/katex.min.css" rel="stylesheet">
+<script src="https://cdn.bootcdn.net/ajax/libs/KaTeX/0.16.4/katex.min.js" type="text/javascript"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/KaTeX/0.16.4/contrib/auto-render.min.js" type="text/javascript"></script>
+
+<script src="/js/all.js" type="text/javascript"></script>
 </body>
-<script>
-    const katex_config = {
-        delimiters:
-            [
-                {left: "$$", right: "$$", display: true},
-                {left: "$", right: "$", display: false}
-            ]
-    };
-    renderMathInElement(document.body, katex_config);
-</script>
 </html>
