@@ -24,7 +24,7 @@ def parse_site_meta(site_meta_path: str) -> meta.SiteMeta.SiteMeta:
     m = meta.SiteMeta.SiteMeta()
 
     try:
-        with open(site_meta_path, "r") as f:
+        with open(site_meta_path, "r", encoding="utf-8") as f:
             meta_file_str = f.read()
     except FileNotFoundError:
         __write_default_meta(site_meta_path)

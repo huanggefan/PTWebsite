@@ -1,12 +1,12 @@
 {
     "name": "11",
-    "owner": 12312,
+    "owner": "测试",
     "key_words": [
-        "\u5173\u952e\u8bcd1",
-        "\u5173\u952e\u8bcd2",
-        "\u5173\u952e\u8bcd3",
-        "\u5173\u952e\u8bcd4"
+        "测试1",
+        "测试2",
+        "测试3",
+        "测试4"
     ],
-    "description": "\u63cf\u8ff0\u7b80\u4ecb\u6458\u8981",
+    "description": "测试，测试，测试，测试，测试",
     "customer_meta": {}
 }

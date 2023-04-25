@@ -42,11 +42,10 @@ def _copy_site_statics(now_dir: str):
             files.append(dir_entry)
 
     for d in dirs:
-        if d.name != "statics":
-            s.extend(_copy_site_statics(d.path))
+        s.extend(_copy_site_statics(d.path))
 
     for f in files:
-        if os.path.splitext(f.name)[-1] != ".md":
+        if os.path.splitext(f.name)[-1] not in [".md", ".json"]:
             p = os.path.relpath(f.path, var.site_work_dir)
             p = os.path.join(var.output_work_dir, p)
             p = (f.path, p)
@@ -71,4 +70,6 @@ def copy_site_statics():
 if __name__ == "__main__":
     var.output_work_dir = "../../demo/output"
     var.site_work_dir = "../../demo/site"
+    var.templates_work_dir = "../../demo/templates"
+    copy_templates_statics()
     copy_site_statics()

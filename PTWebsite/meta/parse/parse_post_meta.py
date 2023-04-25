@@ -55,7 +55,7 @@ class ParsePostMetaDFA(object):
         self.result = {}
 
     def do(self, md_path: str) -> meta.PostMeta.PostMeta | None:
-        with open(md_path, "r") as f:
+        with open(md_path, "r", encoding="utf-8") as f:
             self.text = f.read()
             self.length = len(self.text)
 

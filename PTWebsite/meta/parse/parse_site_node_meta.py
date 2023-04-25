@@ -25,7 +25,7 @@ def __parse_site_node_meta_json(node: meta.SiteNodeMeta.SiteNodeMeta) -> None:
     meta_json_path = os.path.join(node.path, "meta.json")
 
     try:
-        with open(meta_json_path, "r") as f:
+        with open(meta_json_path, "r", encoding="utf-8") as f:
             meta_file_str = f.read()
     except FileNotFoundError:
         __write_default_meta(meta_json_path)

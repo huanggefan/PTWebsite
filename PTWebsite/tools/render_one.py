@@ -11,7 +11,7 @@ def render_one(template: jinja2.Template, info: dict, output_path: str):
     result = template.render(info)
 
     os.makedirs(os.path.split(output_path)[0], exist_ok=True)
-    with open(output_path, "w") as f:
+    with open(output_path, "w", encoding="utf-8") as f:
         f.write(result)
 
     if not var.quiet:

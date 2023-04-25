@@ -22,7 +22,7 @@ def load_template(work_dir: str, template_name: str) -> typing.Optional[jinja2.T
     if not os.path.exists(template_path):
         return None
 
-    with open(template_path, "r") as f:
+    with open(template_path, "r", encoding="utf-8") as f:
         template_text = f.read()
     t = jinja2.Template(template_text)
 

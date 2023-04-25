@@ -1,9 +1,10 @@
 {
     "key_words": [
         "1",
-        "2"
+        "2",
+        "测试"
     ],
-    "description": "",
+    "description": "测试",
     "thumbnail": "/statics/1.png",
     "template": "picture_column",
     "customer_meta": {}
